@@ -40,8 +40,8 @@ SICORAL/
 ## ⚙️ Cara Menjalankan Aplikasi
 1. **Clone Repository**
    ```bash
-   git clone https://github.com/username/sicoral.git
-   cd sicoral
+   git clone https://github.com/Lifyhzz/SiCoral.git
+   cd SiCoral
    ```
 
 2. **Install Dependensi**
