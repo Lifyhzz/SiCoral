@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SICORAL | Portal Deteksi Karang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brandDark: '#0B3B52', /* Dark blue from button */
+                        brandLight: '#F3F6F8', /* Light background */
+                        textMain: '#1A2E35',
+                        textMuted: '#6B7A82',
+                        cyanAccent: '#06b6d4',
+                        iconBg: '#F0F4F8'
+                    },
+                    boxShadow: {
+                        'card': '0 20px 40px -10px rgba(0,0,0,0.1)',
+                        'btn': '0 10px 20px -5px rgba(11, 59, 82, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F4F7F9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body class="antialiased text-textMain selection:bg-cyanAccent/30">
+
+    <div class="max-w-6xl w-full md:h-[650px] bg-white rounded-[2rem] shadow-card overflow-hidden flex flex-col md:flex-row">
+        
+        <!-- Left Side: Image & Text -->
+        <div class="relative w-full md:w-1/2 min-h-[400px] md:min-h-[600px] bg-slate-800">
+            <!-- Gambar menggunakan file lokal (akan disimpan oleh user) -->
+            <img src="{{ url_for('static', filename='images/coral_bg.png') }}" alt="Coral Reef Diver" class="absolute inset-0 w-full h-full object-cover">
+            
+            <!-- Dark gradient overlay for text readability -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            
+            <div class="absolute bottom-0 left-0 w-full p-10 md:p-14 z-10 text-white">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-1.5 h-6 bg-cyanAccent rounded-full"></div>
+                    <span class="text-lg font-bold tracking-wider">SICORAL</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl font-extrabold leading-[1.1] mb-6">
+                    Marine Health<br>Analysis Solution
+                </h1>
+                
+                <p class="text-sm md:text-base text-white/80 max-w-sm leading-relaxed">
+                    Mulai perjalanan penelitian Anda dalam menjaga ekosistem laut bersama teknologi visi komputer mutakhir SICORAL.
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side: Content -->
+        <div class="w-full md:w-1/2 p-10 md:p-14 lg:p-16 flex flex-col justify-center relative">
+            {% if stage == 'overview' %}
+            <div class="mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold mb-3 text-brandDark">Portal Deteksi Karang</h2>
+                <p class="text-textMuted text-sm md:text-base">Gunakan kecerdasan buatan untuk hasil yang lebih akurat</p>
+            </div>
+
+            <div class="space-y-8 mb-12">
+                <!-- Tahap 1 -->
+                <a href="/info/input" class="flex gap-5 items-start group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-iconBg flex items-center justify-center shrink-0 group-hover:bg-brandDark group-hover:text-white transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-brandDark mb-1 group-hover:text-cyanAccent transition-colors">TAHAP 01: INPUT</h3>
+                        <p class="text-xs text-textMuted leading-relaxed">Unggah citra terumbu karang melalui portal analisis untuk diproses oleh sistem.</p>
+                    </div>
+                </a>
+
+                <!-- Tahap 2 -->
+                <a href="/info/analisis" class="flex gap-5 items-start group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-iconBg flex items-center justify-center shrink-0 group-hover:bg-brandDark group-hover:text-white transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-brandDark mb-1 group-hover:text-cyanAccent transition-colors">TAHAP 02: ANALISIS</h3>
+                        <p class="text-xs text-textMuted leading-relaxed">Sistem melakukan ekstraksi fitur untuk mendeteksi pola pemutihan karang.</p>
+                    </div>
+                </a>
+
+                <!-- Tahap 3 -->
+                <a href="/info/hasil" class="flex gap-5 items-start group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-iconBg flex items-center justify-center shrink-0 group-hover:bg-brandDark group-hover:text-white transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-brandDark mb-1 group-hover:text-cyanAccent transition-colors">TAHAP 03: HASIL</h3>
+                        <p class="text-xs text-textMuted leading-relaxed">Dapatkan klasifikasi kesehatan instan beserta visualisasi feature maps yang detail.</p>
+                    </div>
+                </a>
+            </div>
+
+            <a href="/dashboard" class="block w-full text-center bg-brandDark text-white font-semibold py-4 px-6 rounded-xl shadow-btn hover:bg-brandDark/90 transition-all duration-300 transform hover:-translate-y-1 mb-10 flex items-center justify-center gap-2">
+                Coba Deteksi Sekarang
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </a>
+
+            <div class="text-center mt-auto">
+                <p class="text-[10px] uppercase tracking-[0.2em] font-semibold text-textMuted">
+                    MARINE RESEARCH DIVISION
+                </p>
+            </div>
+            {% else %}
+            <!-- Detailed View -->
+            <div class="h-full flex flex-col">
+                <div class="mb-8">
+                    <a href="/" class="inline-flex items-center gap-2 text-textMuted hover:text-brandDark transition-colors mb-6 text-sm font-semibold">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Kembali
+                    </a>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 text-brandDark">{{ data.title }}</h2>
+                    <div class="w-12 h-1 bg-cyanAccent rounded-full mb-6"></div>
+                    <p class="text-brandDark font-bold text-lg mb-4">{{ data.desc }}</p>
+                    <p class="text-textMuted text-sm md:text-base leading-relaxed">
+                        {{ data.detail }}
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
