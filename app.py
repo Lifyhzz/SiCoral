@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from core.image_processing import extract_features, predict_coral_health
 
 app = Flask(__name__)
-app.secret_key = "sicoral_secret_key" # Ganti dengan key yang lebih aman nanti
+app.secret_key = "sicoral_secret_key"
 
 # Konfigurasi folder upload
 UPLOAD_FOLDER = 'static/uploads'
@@ -18,10 +18,12 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# Inisialisasi Endpoint Landing Page (Portal Utama)
 @app.route('/', methods=['GET'])
 def landing():
     return render_template('landing.html', stage='overview')
 
+# Dynamic Routing untuk modul edukasi interaktif
 @app.route('/info/<stage>', methods=['GET'])
 def landing_info(stage):
     # Mapping for detailed explanations
@@ -34,7 +36,7 @@ def landing_info(stage):
         'analisis': {
             'title': 'Tahap 02: Analisis PCD',
             'desc': 'Digital Signal Processing & Feature Extraction.',
-            'detail': 'Sistem melakukan pemisahan objek menggunakan Otsu Thresholding untuk akurasi segmentasi maksimal. Setelah itu, ekstraksi fitur dilakukan pada ruang warna HSV untuk mendeteksi saturasi warna karang secara presisi, yang menjadi basis logika klasifikasi kesehatan ekosistem laut.'
+            'detail': 'Sistem melakukan pemisahan objek menggunakan Otsu Thresholding untuk akurasi segmentasi maksimal. Setelah itu, ekstraksi fitur dilakukan pada ruang warna HSV untuk mendeteksi saturasi warna terumbu karang secara presisi, yang menjadi basis logika klasifikasi kesehatan ekosistem laut.'
         },
         'hasil': {
             'title': 'Tahap 03: Klasifikasi Hasil',
@@ -48,6 +50,7 @@ def landing_info(stage):
         
     return render_template('landing.html', stage=stage, data=info_data[stage])
 
+# Controller Utama Dashboard Analisis
 @app.route('/dashboard', methods=['GET'])
 def index():
     # Model stats for the dashboard
@@ -58,9 +61,10 @@ def index():
     }
     return render_template('index.html', stats=stats)
 
+# Endpoint Inferensi Citra (Data Processing Pipeline)
 @app.route('/detect', methods=['POST'])
 def detect():
-    # 1. Cek apakah ada file yang diupload
+    # Verifikasi unggahan file
     if 'file' not in request.files:
         flash('Tidak ada file yang diunggah.')
         return redirect(request.url)
@@ -71,17 +75,17 @@ def detect():
         return redirect(url_for('index'))
     
     if file and allowed_file(file.filename):
-        # 2. Simpan gambar sementara
+        # Penyimpanan citra sementara
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        # 3. Proses Pengolahan Citra
+        # Memanggil modul ekstraksi ciri dan segmentasi citra dari core/image_processing.py
         result_data = extract_features(filepath) 
         
         if result_data:
             features = result_data['features']
-            # 4. Prediksi menggunakan Model
+            # Inferensi Logika menggunakan Heuristic Rules
             status_prediksi, confidence_score = predict_coral_health(features)
             
             # Hasil rill dari pemrosesan
