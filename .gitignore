@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Uploads
+static/uploads/*
+!static/uploads/.gitkeep
+
+# IDEs
+.idea/
+.vscode/
+
+# Ignore test_features if you don't want it on Github
+# test_features.py

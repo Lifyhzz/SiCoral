@@ -38,21 +38,43 @@ def extract_features(image_path):
     # Tujuan: Mengubah format RGB ke format Hue, Saturation, Value agar sistem kebal terhadap perubahan silau cahaya matahari laut.
     hsv = cv2.cvtColor(img_blurred, cv2.COLOR_BGR2HSV)
     
-    # Metode 5: Segmentasi Otomatis (Otsu Thresholding)
-    # Tujuan: Mencari angka pembatas (ambang) secara otomatis untuk membedakan piksel terumbu karang (putih) dengan latar air (hitam).
+    # Metode 5: Segmentasi Adaptif Berbasis Warna & Intensitas
+    # Tujuan: Gabungan Otsu (Intensitas) dan HSV Masking (Warna) untuk membuang air laut secara total.
     gray_for_otsu = cv2.cvtColor(img_blurred, cv2.COLOR_BGR2GRAY)
-    ret, mask = cv2.threshold(gray_for_otsu, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    _, mask_otsu = cv2.threshold(gray_for_otsu, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     
-    # Metode 6: Morphological Operation (Memperbaiki Hasil Masking / Opening)
-    # Tujuan: Melakukan operasi Erosi lalu Dilasi untuk menghapus sisa bintik noise keputihan yang salah terdeteksi oleh Otsu.
+    # Masking Warna: Membuang area yang terlalu biru (Air) atau terlalu gelap (Bayangan dalam)
+    lower_water = np.array([85, 30, 0])
+    upper_water = np.array([145, 255, 255])
+    mask_water = cv2.inRange(hsv, lower_water, upper_water)
+    mask_non_water = cv2.bitwise_not(mask_water)
+    
+    # Combine: Hanya ambil objek yang bukan air dan memiliki intensitas kontras (Otsu)
+    # Cek apakah Otsu mendeteksi objek terang atau gelap (di laut, karang biasanya lebih terang/bertekstur dibanding air dalam)
+    mean_val_otsu = np.mean(gray_for_otsu[mask_otsu == 255]) if np.any(mask_otsu == 255) else 0
+    mean_val_bg = np.mean(gray_for_otsu[mask_otsu == 0]) if np.any(mask_otsu == 0) else 0
+    
+    if mean_val_otsu < mean_val_bg: # Jika yang dideteksi Otsu malah lebih gelap (mungkin bayangan), balik masknya
+        mask_otsu = cv2.bitwise_not(mask_otsu)
+        
+    mask = cv2.bitwise_and(mask_otsu, mask_non_water)
+    
+    # Metode 6: Morphological Operation (Pembersihan Lanjut)
     kernel = np.ones((5, 5), np.uint8)
-    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel) # Tutup lubang kecil di dalam karang
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)  # Buang bintik kecil di air
     
-    # (Koreksi Tambahan) Pengecekan warna air laut, jika warnanya air maka balikkan mask (invert)
-    if np.any(mask == 255):
-        mean_h_initial = np.mean(hsv[:, :, 0][mask == 255])
-        if 90 < mean_h_initial < 140:
-            mask = cv2.bitwise_not(mask)
+    # --- Metode Eksklusif: Isolasi Objek Utama Terbesar (Fokus Spesies Utama) ---
+    # Tujuan: Mengabaikan ikan kecil, sampah, pelampung, yang ikut lolos warna, 
+    # dengan MEMAKSA sistem HANYA membaca objek/spesies yang paling memakan layar/terbesar.
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if contours:
+        largest_contour = max(contours, key=cv2.contourArea)
+        bounding_mask = np.zeros_like(mask)
+        # Warnai ruang objek terbesar dan jadikan mask tunggal
+        cv2.drawContours(bounding_mask, [largest_contour], -1, 255, thickness=cv2.FILLED)
+        # Aplikasikan mask tersebut ke mask utama agar pori-pori/teksturnya tetap valid
+        mask = cv2.bitwise_and(mask, bounding_mask)
             
     foreground_pixels = hsv[mask == 255]
     
@@ -70,8 +92,19 @@ def extract_features(image_path):
         gray_foreground = gray_for_otsu[mask == 255]
         std_gray = np.std(gray_foreground)
     
-    # Menyusun Vektor Ciri: [Statistik Terpusat H, S, V & Analisis Dispersi Tekstur]
-    numeric_features = [float(mean_h), float(mean_s), float(mean_v), float(std_gray)]
+    # ── Metode 8: Canny Edge Density ─────────────────────────────────────
+    edges = cv2.Canny(gray, 100, 200)
+    mask_area = int(np.sum(mask == 255))
+    if mask_area > 0:
+        edge_in_mask = cv2.bitwise_and(edges, edges, mask=mask)
+        edge_density = float(np.sum(edge_in_mask == 255) / mask_area)
+    else:
+        edge_density = float(np.sum(edges == 255) / (224 * 224))
+
+    # ── Vektor Ciri Final (Sesuai Metode Asli SICORAL: H, S, V, T, E) ──
+    numeric_features = [
+        float(mean_h), float(mean_s), float(mean_v), float(std_gray), edge_density
+    ]
     
     # --- MEMBUAT 10 FILTER UNTUK VISUALISASI ---
     filters = []
@@ -93,6 +126,13 @@ def extract_features(image_path):
         mask_focus = "Bentuk blok putih ini dimanfaatkan untuk mengkunci kalkulasi status karang yang tengah melemah <strong>(Pucat)</strong> dengan presisi tinggi."
         morph_focus = "Batas kontur menyoroti fisik murni terumbu batu yang sedang berjuang dalam fase pergeseran struktur transisi pucat."
         edge_focus = "Garis kerutan halus masih rimbun namun setengahnya mulai pecah karena bercak gradasi dari karang yang telah luntur sebagian."
+    elif "Bukan" in status_label:
+        hue_focus = "Objek tidak menunjukkan karakteristik warna alami terumbu karang (Cokelat/Hijau). Didominasi warna latar belakang."
+        sat_focus = "Kepadatan warna tidak konsisten dengan profil biologis terumbu karang; nilai saturasi tidak memenuhi ambang batas minimal."
+        val_focus = "Intensitas cahaya menunjukkan pantulan dari media non-karang seperti air atau pasir yang bersifat seragam."
+        mask_focus = "Masking mendeteksi objek yang terlalu halus atau tidak memiliki kerumitan struktur polip karang."
+        morph_focus = "Garis kontur menunjukkan bentuk yang terlalu sederhana atau tidak terdefinisi sebagai fitur biologis."
+        edge_focus = "Kepadatan tekstur (Edge Density) sangat rendah, mengonfirmasi objek ini adalah air, pasir, atau benda mati lainnya."
     else: # SEHAT
         hue_focus = "Area secara konsisten dikuasai oleh <strong>Cokelat Kehijauan / Rona Hangat</strong>. Bukti melimpahnya pigmen warna alami karang yang Sehat."
         sat_focus = "Muncul titik permukaan yang didominasi warna <strong>Ekstra Pekat (Tinggi intensitas)</strong>. Hanya bisa dijumpai dari tebalnya polip terumbu karang yang sehat murni."
@@ -167,35 +207,48 @@ def extract_features(image_path):
 
 # Modul Klasifikasi berbasis Aturan Logika (Heuristic Rule-Based Reasoning)
 def predict_coral_health(features):
-    if features is None:
+    if features is None or len(features) < 5:
         return "Gagal", 0
+
+    h = features[0]
+    s = features[1]
+    v = features[2]
+    t = features[3]
+    e = features[4]
+
+    # ══════════════════════════════════════════════════════════════════
+    # REKAYASA LOGIKA PROFESIONAL: PENDEKATAN WHITELISTING 
+    # (Berdasarkan 5 fitur bawaan SICORAL)
+    # Daripada menebak semua benda non-karang, sistem HANYA MENGIZINKAN
+    # ciri organik spesifik untuk lolos. Sisanya ditolak mutlak.
+    # ══════════════════════════════════════════════════════════════════
     
-    h = features[0] # Hue (Sifat Warna, rentang 0-180)
-    s = features[1] # Saturation (Kepekatan Warna, rentang 0-255)
-    v = features[2] # Value / Brightness (Kecerahan, rentang 0-255)
-    t = features[3] # Tekstur (Standar Deviasi)
-    
-    # LOGIKA PENDETEKSIAN:
-    # Terumbu Sakit (Bleached) = Berwarna Putih (Kecerahan V Tinggi, Warna S Rendah)
-    # Terumbu Sehat = Berwarna Cokelat/Hijau (Hue Rendah, Saturasi S Cukup)
-    
-    # Deteksi "Sehat Palsu" (Warna Biru Air)
-    # Jika warna dominan adalah Biru/Sian (Hue 90-140), itu kemungkinan warna air laut, bukan pigmen terumbu karang.
-    is_water_color = 85 < h < 145
-    
-    # KRITERIA BLEACHED (SAKIT)
-    # Jika sangat terang (Putih) ATAU warnanya Pudar bercampur biru air laut
-    if v > 165 and (s < 80 or is_water_color):
-        status = "Sakit (Bleached)" # Klasifikasi: Kecerahan Tinggi & Kehilangan Pigmen
-        conf = min(99.0, (v / 255) * 100 + 20)
+    # 1. Pengecekan KETAT Rentang Warna Air Laut/Langit
+    # (hanya jika s > 15 agar benda putih/abu netral tidak tersaring salah sebagai biru)
+    if (90 <= h <= 140) and s > 15:
+        return "Bukan Terumbu Karang (Air/Langit Dominan)", 0.0
+
+    # 2. Pengecekan Benda Halus/Buatan (Mobil, Gedung, Pasir, Ikan/Spesies Lain)
+    # Karang harus memiliki tekstur tepi yang sangat rapat khas polip/rongga (e >= 0.18). 
+    # Benda dengan fitur buatan atau kulit ikan selalu memiliki Canny Edge < 0.16.
+    if t < 22 or e < 0.18:
+        return "Bukan Terumbu Karang (Benda Mati/Spesies Lain)", 0.0
+        
+    # 3. Pengecekan Warna Ekstrem (Ikan Hias, Sampah Plastik)
+    # Saturasi rata-rata seluruh piksel karang jarang melebihi 150 karena adanya rongga bayangan.
+    if s > 150:
+        return "Bukan Terumbu Karang (Warna Sintetis/Hewan)", 0.0
+
+    # 4. Pengecekan SAKIT (Bleached)
+    # Karang mati memutih = Kecerahan moderat tinggi (v>=140) dan Saturasi anjlok (s<40)
+    if v >= 140 and s < 40:
+        status = "Sakit (Bleached)"
+        conf = min(99.0, (v / 255) * 100 + 10)
         return status, round(conf, 1)
 
-    # ANALISIS KONDISI OPTIMAL (SEHAT)
-    if s > 60 and v < 175 and not is_water_color and t > 10:
-        status = "Sehat (Healthy)" # Klasifikasi: Kepekatan Pigmen Optimal & Tekstur Terumbu Aktif
-        conf = min(99.0, s + 10)
-        return status, round(conf, 1)
-
-    # SECARA DEFAULT (TIDAK MEMENUHI KEDUANYA): PUCAT / PERINGATAN DINI
-    status = "Pucat (Warning)"
-    return status, 75.0
+    # 5. Pengecekan SEHAT (Healthy) vs PUCAT (Warning)
+    # Di level ini objek sudah divalidasi sebagai karang bertekstur rapat.
+    if s >= 50:
+        return "Sehat (Healthy)", round(min(99.0, s + 30), 1)
+    else:
+        return "Pucat (Warning)", 65.0

@@ -88,15 +88,25 @@ def detect():
             # Inferensi Logika menggunakan Heuristic Rules
             status_prediksi, confidence_score = predict_coral_health(features)
             
+            # Pisahkan detail jika statusnya adalah penolakan (Bukan Terumbu Karang)
+            status_title = status_prediksi
+            status_detail = ""
+            if "Bukan Terumbu Karang" in status_prediksi and "(" in status_prediksi:
+                parts = status_prediksi.split(" (", 1)
+                status_title = parts[0]
+                status_detail = parts[1].rstrip(")")
+            
             # Hasil rill dari pemrosesan
             result = {
-                'status': status_prediksi,
+                'status': status_title,
+                'detail': status_detail,
                 'confidence': f"{confidence_score}%",
                 'image_url': f'uploads/{filename}',
                 'features': {
                     'Mean Hue': round(features[0], 2),
                     'Mean Saturation': round(features[1], 2),
                     'Mean Value': round(features[2], 2),
+                    'Edge Density': round(features[4], 4),
                     'Std Dev (Texture)': round(features[3], 2)
                 },
                 'steps': result_data['steps'],

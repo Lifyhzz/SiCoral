@@ -198,14 +198,14 @@
                                 <div class="flex items-center gap-2 mb-1">
                                     <span class="w-2 h-2 rounded-full
                                         {% if 'Healthy' in result.status %}bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]
-                                        {% elif 'Bleached' in result.status %}bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]
+                                        {% elif 'Bukan' in result.status %}bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)]
                                         {% else %}bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]{% endif %}">
                                     </span>
                                     <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Klasifikasi Sistem</p>
                                 </div>
                                 <div class="text-4xl font-black tracking-tight
                                     {% if 'Healthy' in result.status %}text-emerald-600
-                                    {% elif 'Bleached' in result.status %}text-rose-600
+                                    {% elif 'Bukan' in result.status %}text-rose-600
                                     {% else %}text-amber-600{% endif %}">
                                     {{ result.status }}
                                 </div>
@@ -222,6 +222,20 @@
                                     <p class="font-mono text-2xl text-slate-800 font-black tracking-tighter">&lt; 1 dtk</p>
                                 </div>
                             </div>
+                            
+                            {% if 'Bukan' in result.status %}
+                            <!-- Peringatan Sistem TUNGGAL (Tidak Redundan) -->
+                            <div class="p-4 bg-rose-50 border border-rose-100 rounded-xl flex items-start gap-3">
+                                <div class="w-7 h-7 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center shrink-0">
+                                    <svg class="w-4 h-4 shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-rose-700 uppercase tracking-widest mb-0.5">PERINGATAN SISTEM</p>
+                                    <p class="text-[11px] text-rose-600 font-bold leading-tight mb-1">Gambar dideteksi BUKAN TERUMBU KARANG valid!</p>
+                                    <p class="text-[10px] text-rose-500 leading-snug">Algoritma menolak gambar ini karena <strong>{{ result.detail }}</strong>. Pastikan Anda mengunggah citra spesies terumbu karang yang diambil dari kedalaman bawah laut.</p>
+                                </div>
+                            </div>
+                            {% endif %}
 
                             <!-- Laporan Diagnosa -->
                             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
@@ -233,28 +247,29 @@
                                     <div class="flex items-start gap-3">
                                         <div class="w-5 h-5 rounded-full bg-primary/10 text-[10px] font-black text-primary flex items-center justify-center shrink-0 mt-0.5">1</div>
                                         <div>
-                                            <p class="text-[10px] font-black text-slate-700 uppercase">Ekstraksi Data</p>
-                                            <p class="text-[10px] text-slate-500 leading-tight">Saturasi terdeteksi pada nilai <span class="font-bold text-slate-800">{{ result.features['Mean Saturation'] }}</span>.</p>
+                                            <p class="text-[10px] font-black text-slate-700 uppercase">Ekstraksi Fitur Parameter</p>
+                                            <p class="text-[10px] text-slate-500 leading-tight">Saturasi terdeteksi di angka <span class="font-bold text-slate-800">{{ result.features['Mean Saturation'] }}</span>, Edge Density: <span class="font-bold text-slate-800">{{ result.features['Edge Density'] }}</span>.</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-3">
                                         <div class="w-5 h-5 rounded-full bg-primary/10 text-[10px] font-black text-primary flex items-center justify-center shrink-0 mt-0.5">2</div>
                                         <div>
-                                            <p class="text-[10px] font-black text-slate-700 uppercase">Evaluasi Aturan</p>
+                                            <p class="text-[10px] font-black text-slate-700 uppercase">Evaluasi Aturan (Heuristic)</p>
                                             <p class="text-[10px] text-slate-500 leading-tight">
-                                                {% if 'Healthy' in result.status %}Saturasi tinggi (&gt;60) dan warna alami terdeteksi. Pigmentasi klorofil dalam kondisi optimal.
-                                                {% elif 'Bleached' in result.status %}Kecerahan tinggi (V &gt; 165) atau warna pudar terdeteksi. Gejala kehilangan pigmen (Bleaching).
-                                                {% else %}Warna di zona transisi. Tanda awal stres lingkungan atau pemudaran ringan.{% endif %}
+                                                {% if 'Bukan' in result.status %}Tekstur gambar terindikasi nol porositas (permukaan halus) / warna murni milik air atau benda mati, melanggar batas kewajaran biologis karang.
+                                                {% elif 'Healthy' in result.status %}Kepadatan tepi (tekstur karang) rapat dan wajar. Pigmentasi klorofil zooxanthellae (Saturasi) berada pada level optimal.
+                                                {% else %}Kecerahan ekstrem (&gt;140) disertai hilangnya saturasi, menunjukan gejala biologis *coral bleaching* (pemutihan tingkat stres).
+                                                {% endif %}
                                             </p>
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-3">
-                                        <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm">
+                                        <div class="w-5 h-5 rounded-full {% if 'Healthy' in result.status %}bg-emerald-500{% elif 'Bukan' in result.status %}bg-rose-500{% else %}bg-amber-500{% endif %} flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                         </div>
                                         <div>
-                                            <p class="text-[10px] font-black text-emerald-600 uppercase">Kesimpulan</p>
-                                            <p class="text-[10px] text-slate-600 font-bold leading-tight">Sistem menetapkan status: {{ result.status }}.</p>
+                                            <p class="text-[10px] font-black {% if 'Healthy' in result.status %}text-emerald-600{% elif 'Bukan' in result.status %}text-rose-600{% else %}text-amber-600{% endif %} uppercase">Kesimpulan</p>
+                                            <p class="text-[10px] text-slate-600 font-bold leading-tight">Sistem menetapkan status akhir: {{ result.status }}.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -397,10 +412,10 @@
                                         <span class="text-[11px] font-black text-slate-800 uppercase tracking-wide">Tahap 2: Preprocessing Citra</span>
                                         <span class="ml-2 text-[9px] font-bold text-slate-400">Resize → Grayscale → Gaussian Blur</span>
                                     </div>
-                                    {% if result %}<span class="ml-auto px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-full border border-emerald-100">✓ Selesai</span>{% endif %}
+                                    {% if result and 'Bukan' not in result.status %}<span class="ml-auto px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-full border border-emerald-100">✓ Selesai</span>{% endif %}
                                 </div>
                                 <div class="px-5 py-5">
-                                    {% if result and result.steps %}
+                                    {% if result and result.steps and 'Bukan' not in result.status %}
                                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                         {% for step in result.steps %}
                                         <div class="cursor-pointer group" onclick="openModal('data:image/jpeg;base64,{{ step.img }}', '{{ step.name }}', '{{ step.desc }}')">
@@ -456,11 +471,20 @@
                                         <span class="text-[11px] font-black text-slate-800 uppercase tracking-wide">Tahap 3: Analisis Fitur Warna (HSV)</span>
                                         <span class="ml-2 text-[9px] font-bold text-slate-400">Konversi HSV → Otsu Threshold → Ekstraksi Mean & Std Dev</span>
                                     </div>
-                                    {% if result %}<span class="ml-auto px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-full border border-emerald-100">✓ Selesai</span>{% endif %}
+                                    {% if result and 'Bukan' not in result.status %}
+                                    <div class="ml-auto flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full border border-emerald-200 shadow-sm relative overflow-hidden group">
+                                        <div class="absolute inset-0 bg-emerald-100 opacity-0 group-hover:opacity-50 transition-opacity"></div>
+                                        <span class="relative flex h-2 w-2">
+                                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                        </span>
+                                        <span class="relative z-10 tracking-wide">SELESAI</span>
+                                    </div>
+                                    {% endif %}
                                 </div>
                                 <div class="px-6 py-6 font-sans">
                                     <!-- PENJELASAN TEORITIS LENGKAP -->
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8 items-start">
                                         <!-- Langkah 1 -->
                                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 relative pt-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer group" onclick="this.querySelector('.formula-box').classList.toggle('hidden')">
                                             <div class="absolute -top-3 left-4 bg-slate-800 text-white text-[9px] font-black px-2.5 py-1 rounded shadow-md uppercase tracking-widest border border-slate-700">Langkah 3.1</div>
@@ -543,7 +567,7 @@
                                             <!-- SECTION: GALERI FILTER BERKOTAK -->
                                             <div class="space-y-4">
                                                 
-                                                {% if result and result.filters %}
+                                                {% if result and result.filters and 'Bukan' not in result.status %}
                                                 <!-- KOTAK 1: Analisis HSV (Filter 1-3) -->
                                                 <div class="bg-slate-50 border border-slate-200/60 rounded-xl p-4 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)]">
                                                     <div class="flex items-center gap-2.5 mb-3 border-b border-slate-200/60 pb-3">
@@ -680,7 +704,7 @@
                                                 <p class="text-[10px] font-black text-slate-700 uppercase tracking-widest">Kuantifikasi Fitur</p>
                                             </div>
 
-                                            {% if result and result.features %}
+                                            {% if result and result.features and 'Bukan' not in result.status %}
                                             <div class="space-y-3">
                                                 {% for name, value in result.features.items() %}
                                                 {% set formula = '' %}
@@ -735,7 +759,6 @@
                         </div>
                     </div>
 
-                </div><!-- end pipeline steps -->
             </div><!-- end pipeline section -->
 
             <!-- Bottom padding -->
