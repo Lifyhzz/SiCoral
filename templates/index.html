@@ -25,6 +25,7 @@
 
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
@@ -43,7 +44,8 @@
         }
     </script>
     <style>
-        body { background-color: #F8FAFC; }
+        /* ── LIGHT MODE BASE ── */
+        body { background-color: #F8FAFC; transition: background-color 0.3s ease, color 0.3s ease; }
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #e2e8f0; border-radius: 10px; }
@@ -83,7 +85,118 @@
 
         .hover-lift { transition: all 0.25s cubic-bezier(0.4,0,0.2,1); }
         .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 12px 30px -6px rgba(11,59,82,0.12); }
+
+        /* ── DARK MODE OVERRIDES ── */
+        .dark body,
+        html.dark body { background-color: #0a1628; color: #e2e8f0; }
+
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
+
+        /* Dark mode - sidebar */
+        .dark aside { background-color: #0f2040 !important; border-color: #1e3a5f !important; }
+        .dark .sidebar-border { border-color: #1e3a5f !important; }
+
+        /* Dark mode - header */
+        .dark header { background-color: rgba(15,32,64,0.92) !important; border-color: #1e3a5f !important; }
+
+        /* Dark mode - cards & containers */
+        .dark .bg-white { background-color: #112240 !important; }
+        .dark .bg-slate-50 { background-color: #0d1b35 !important; }
+        .dark .bg-slate-100 { background-color: #172b4d !important; }
+
+        /* Dark mode - borders */
+        .dark .border-slate-100 { border-color: #1e3a5f !important; }
+        .dark .border-slate-200 { border-color: #1e3a5f !important; }
+        .dark .border-slate-300 { border-color: #254a72 !important; }
+
+        /* Dark mode - text */
+        .dark .text-slate-800 { color: #e2e8f0 !important; }
+        .dark .text-slate-700 { color: #cbd5e1 !important; }
+        .dark .text-slate-600 { color: #94a3b8 !important; }
+        .dark .text-slate-500 { color: #64748b !important; }
+        .dark .text-slate-400 { color: #475569 !important; }
+        .dark .text-textDark { color: #e2e8f0 !important; }
+        .dark .text-textMuted { color: #64748b !important; }
+
+        /* Dark mode - formula boxes */
+        .dark .bg-white.p-3.rounded-lg { background-color: #1a2f50 !important; border-color: #254a72 !important; }
+        .dark .shadow-inner { box-shadow: inset 0 2px 8px rgba(0,0,0,0.4) !important; }
+
+        /* Dark mode - hover effects */
+        .dark .hover\:bg-slate-50:hover { background-color: #1e3a5f !important; }
+        .dark .hover\:bg-slate-100\/80:hover { background-color: #1e3a5f !important; }
+        .dark .hover\:bg-slate-200:hover { background-color: #1e3a5f !important; }
+
+        /* Dark mode - modal */
+        .dark .modal-animate { background-color: #112240 !important; }
+
+        /* Dark mode - upload form */
+        .dark label.flex.flex-col { border-color: #254a72 !important; background-color: #0d1b35 !important; }
+        .dark label.flex.flex-col:hover { border-color: rgba(6,182,212,0.4) !important; background-color: #0f2040 !important; }
+
+        /* Dark mode - system status */
+        .dark .rounded-xl.bg-slate-50.border.border-slate-100 { background-color: #0d1b35 !important; border-color: #1e3a5f !important; }
+        .dark .text-slate-600.font-bold { color: #94a3b8 !important; }
+
+        /* Dark mode - pipeline connector line */
+        .dark .pipeline-step:not(:last-child)::after {
+            background: linear-gradient(to bottom, #0B3B52 0%, #1e3a5f 100%);
+        }
+
+        /* Dark mode - gradient headers in pipeline steps */
+        .dark .bg-gradient-to-r.from-primary\/5 { background: linear-gradient(to right, rgba(11,59,82,0.3), transparent) !important; }
+        .dark .bg-gradient-to-r.from-blue-50 { background: linear-gradient(to right, rgba(30,58,138,0.3), transparent) !important; }
+        .dark .bg-gradient-to-r.from-cyan-50 { background: linear-gradient(to right, rgba(21,94,117,0.3), transparent) !important; }
+
+        /* Dark mode - stat cards */
+        .dark .bg-slate-50.border.border-slate-100.rounded-xl { background-color: #0d1b35 !important; border-color: #1e3a5f !important; }
+
+        /* Dark mode - badge/tag neutral */
+        .dark .bg-slate-100.text-slate-700 { background-color: #1e3a5f !important; color: #94a3b8 !important; }
+
+        /* Dark mode - nav items */
+        .dark a.text-textMuted.hover\:text-textDark { color: #64748b; }
+        .dark a.text-textMuted.hover\:text-textDark:hover { color: #cbd5e1 !important; background-color: #1e3a5f !important; }
+
+        /* Dark mode - flash message */
+        .dark .bg-red-50 { background-color: rgba(127,29,29,0.3) !important; border-color: #7f1d1d !important; }
+
+        /* Dark mode - upload icon box */
+        .dark .w-14.h-14.bg-white.border.border-slate-200 { background-color: #1a2f50 !important; border-color: #254a72 !important; }
+        .dark .w-10.h-10.rounded-xl.bg-slate-100 { background-color: #1a2f50 !important; }
+
+        /* Dark mode toggle button */
+        #dark-mode-toggle {
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        #dark-mode-toggle:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        /* Formula inner boxes */
+        .dark .bg-white.px-2.py-1.rounded.border.border-slate-200 { background-color: #1a2f50 !important; border-color: #254a72 !important; }
+        .dark .hidden.px-3.py-2.bg-slate-100\/50.border-t.border-slate-200 { background-color: rgba(13,27,53,0.7) !important; border-color: #1e3a5f !important; }
+
+        /* Smooth transitions for all elements */
+        *, *::before, *::after {
+            transition-property: background-color, border-color, color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4,0,0.2,1);
+            transition-duration: 200ms;
+        }
+        /* Override for transforms & other props that shouldn't inherit transition */
+        .hover-lift, .group:hover img, [class*="scale-"], [class*="translate-"], [class*="rotate-"] {
+            transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+        }
     </style>
+    <!-- Apply dark mode before render to prevent flash -->
+    <script>
+        (function() {
+            if (localStorage.getItem('sicoral-darkmode') === 'true' ||
+                (!localStorage.getItem('sicoral-darkmode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
 </head>
 <body class="text-textDark font-sans flex h-screen overflow-hidden selection:bg-primary/20">
 
@@ -137,6 +250,20 @@
                 <p class="text-[10px] text-slate-400 font-medium">Monitoring Kesehatan Terumbu Karang &mdash; Realtime</p>
             </div>
 
+            <!-- Dark Mode Toggle Button -->
+            <button id="dark-mode-toggle" onclick="toggleDarkMode()"
+                class="relative w-10 h-10 rounded-xl flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-800 shadow-sm border border-slate-200 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
+                title="Toggle Tema Gelap"
+                aria-label="Toggle dark mode">
+                <!-- Sun icon (shown in dark mode) -->
+                <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+                <!-- Moon icon (shown in light mode) -->
+                <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                </svg>
+            </button>
         </header>
 
         <!-- Scrollable Content -->
@@ -770,22 +897,48 @@
     <!-- ── IMAGE MODAL ── -->
     <div id="image-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
         <div class="absolute inset-0" onclick="closeModal()"></div>
-        <div class="bg-white rounded-2xl overflow-hidden max-w-3xl w-full shadow-2xl relative z-10 modal-animate flex flex-col md:flex-row">
+        <div class="bg-white rounded-2xl overflow-hidden max-w-3xl w-full shadow-2xl relative z-10 modal-animate flex flex-col md:flex-row dark:bg-slate-800">
             <div class="w-full md:w-3/5 bg-slate-900 flex items-center justify-center min-h-[280px]">
                 <img id="modal-img" src="" class="max-w-full max-h-[70vh] object-contain" alt="Preview">
             </div>
             <div class="w-full md:w-2/5 p-7 flex flex-col justify-center">
-                <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 p-1.5 rounded-full transition-colors">
+                <button onclick="closeModal()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 p-1.5 rounded-full transition-colors dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600 dark:hover:text-white">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
-                <span class="text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-2 block">Pratinjau Citra</span>
-                <h4 id="modal-title" class="text-xl font-black text-slate-800 mb-2">--</h4>
-                <p id="modal-desc" class="text-xs text-slate-500 leading-relaxed">--</p>
+                <span class="text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-2 block dark:text-slate-400">Pratinjau Citra</span>
+                <h4 id="modal-title" class="text-xl font-black text-slate-800 mb-2 dark:text-white">--</h4>
+                <p id="modal-desc" class="text-xs text-slate-500 leading-relaxed dark:text-slate-400">--</p>
             </div>
         </div>
     </div>
 
     <script>
+        // ── DARK MODE LOGIC ──
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('sicoral-darkmode', isDark);
+            updateDarkModeIcons(isDark);
+        }
+
+        function updateDarkModeIcons(isDark) {
+            const sun = document.getElementById('icon-sun');
+            const moon = document.getElementById('icon-moon');
+            if (isDark) {
+                sun.classList.remove('hidden');
+                moon.classList.add('hidden');
+            } else {
+                sun.classList.add('hidden');
+                moon.classList.remove('hidden');
+            }
+        }
+
+        // Initialize icons on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDark = document.documentElement.classList.contains('dark');
+            updateDarkModeIcons(isDark);
+        });
+
+        // ── MODAL LOGIC ──
         function openModal(imgSrc, title, descHtml) {
             document.getElementById('modal-img').src = imgSrc;
             document.getElementById('modal-title').innerText = title;
