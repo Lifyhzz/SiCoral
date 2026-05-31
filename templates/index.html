@@ -86,96 +86,86 @@
         .hover-lift { transition: all 0.25s cubic-bezier(0.4,0,0.2,1); }
         .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 12px 30px -6px rgba(11,59,82,0.12); }
 
-        /* ── DARK MODE OVERRIDES ── */
-        .dark body,
-        html.dark body { background-color: #0a1628; color: #e2e8f0; }
+        /* ── DARK MODE OVERRIDES (HIGH CONTRAST FIX) ── */
+        html.dark body { background-color: #0a1628 !important; color: #f1f5f9 !important; }
 
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
+        html.dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
 
-        /* Dark mode - sidebar */
-        .dark aside { background-color: #0f2040 !important; border-color: #1e3a5f !important; }
-        .dark .sidebar-border { border-color: #1e3a5f !important; }
+        /* Backgrounds & Borders */
+        html.dark aside, 
+        html.dark header { background-color: rgba(15,32,64,0.95) !important; border-color: #1e3a5f !important; }
+        
+        html.dark .bg-white { background-color: #112240 !important; color: #ffffff !important; border-color: #1e3a5f !important; }
+        html.dark .bg-slate-50, 
+        html.dark .bg-slate-50\/50 { background-color: #0d1b35 !important; border-color: #1e3a5f !important; }
+        html.dark .bg-slate-100,
+        html.dark .bg-slate-100\/50 { background-color: #172b4d !important; border-color: #254a72 !important; }
+        
+        html.dark .sidebar-border,
+        html.dark .border-slate-100,
+        html.dark .border-slate-200 { border-color: #1e3a5f !important; }
+        html.dark .border-slate-300 { border-color: #254a72 !important; }
 
-        /* Dark mode - header */
-        .dark header { background-color: rgba(15,32,64,0.92) !important; border-color: #1e3a5f !important; }
-
-        /* Dark mode - cards & containers */
-        .dark .bg-white { background-color: #112240 !important; }
-        .dark .bg-slate-50 { background-color: #0d1b35 !important; }
-        .dark .bg-slate-100 { background-color: #172b4d !important; }
-
-        /* Dark mode - borders */
-        .dark .border-slate-100 { border-color: #1e3a5f !important; }
-        .dark .border-slate-200 { border-color: #1e3a5f !important; }
-        .dark .border-slate-300 { border-color: #254a72 !important; }
-
-        /* Dark mode - text */
-        .dark .text-slate-800 { color: #e2e8f0 !important; }
-        .dark .text-slate-700 { color: #cbd5e1 !important; }
-        .dark .text-slate-600 { color: #94a3b8 !important; }
-        .dark .text-slate-500 { color: #64748b !important; }
-        .dark .text-slate-400 { color: #475569 !important; }
-        .dark .text-textDark { color: #e2e8f0 !important; }
-        .dark .text-textMuted { color: #64748b !important; }
-
-        /* Dark mode - formula boxes */
-        .dark .bg-white.p-3.rounded-lg { background-color: #1a2f50 !important; border-color: #254a72 !important; }
-        .dark .shadow-inner { box-shadow: inset 0 2px 8px rgba(0,0,0,0.4) !important; }
-
-        /* Dark mode - hover effects */
-        .dark .hover\:bg-slate-50:hover { background-color: #1e3a5f !important; }
-        .dark .hover\:bg-slate-100\/80:hover { background-color: #1e3a5f !important; }
-        .dark .hover\:bg-slate-200:hover { background-color: #1e3a5f !important; }
-
-        /* Dark mode - modal */
-        .dark .modal-animate { background-color: #112240 !important; }
-
-        /* Dark mode - upload form */
-        .dark label.flex.flex-col { border-color: #254a72 !important; background-color: #0d1b35 !important; }
-        .dark label.flex.flex-col:hover { border-color: rgba(6,182,212,0.4) !important; background-color: #0f2040 !important; }
-
-        /* Dark mode - system status */
-        .dark .rounded-xl.bg-slate-50.border.border-slate-100 { background-color: #0d1b35 !important; border-color: #1e3a5f !important; }
-        .dark .text-slate-600.font-bold { color: #94a3b8 !important; }
-
-        /* Dark mode - pipeline connector line */
-        .dark .pipeline-step:not(:last-child)::after {
-            background: linear-gradient(to bottom, #0B3B52 0%, #1e3a5f 100%);
+        /* Typography - Forcing bright text */
+        html.dark .text-primary { color: #38bdf8 !important; } /* Bright Cyan */
+        
+        html.dark .text-slate-900,
+        html.dark .text-slate-800,
+        html.dark .text-textDark,
+        html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 { 
+            color: #ffffff !important; 
         }
-
-        /* Dark mode - gradient headers in pipeline steps */
-        .dark .bg-gradient-to-r.from-primary\/5 { background: linear-gradient(to right, rgba(11,59,82,0.3), transparent) !important; }
-        .dark .bg-gradient-to-r.from-blue-50 { background: linear-gradient(to right, rgba(30,58,138,0.3), transparent) !important; }
-        .dark .bg-gradient-to-r.from-cyan-50 { background: linear-gradient(to right, rgba(21,94,117,0.3), transparent) !important; }
-
-        /* Dark mode - stat cards */
-        .dark .bg-slate-50.border.border-slate-100.rounded-xl { background-color: #0d1b35 !important; border-color: #1e3a5f !important; }
-
-        /* Dark mode - badge/tag neutral */
-        .dark .bg-slate-100.text-slate-700 { background-color: #1e3a5f !important; color: #94a3b8 !important; }
-
-        /* Dark mode - nav items */
-        .dark a.text-textMuted.hover\:text-textDark { color: #64748b; }
-        .dark a.text-textMuted.hover\:text-textDark:hover { color: #cbd5e1 !important; background-color: #1e3a5f !important; }
-
-        /* Dark mode - flash message */
-        .dark .bg-red-50 { background-color: rgba(127,29,29,0.3) !important; border-color: #7f1d1d !important; }
-
-        /* Dark mode - upload icon box */
-        .dark .w-14.h-14.bg-white.border.border-slate-200 { background-color: #1a2f50 !important; border-color: #254a72 !important; }
-        .dark .w-10.h-10.rounded-xl.bg-slate-100 { background-color: #1a2f50 !important; }
-
-        /* Dark mode toggle button */
-        #dark-mode-toggle {
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        
+        html.dark .text-slate-700,
+        html.dark .text-slate-600 { 
+            color: #f1f5f9 !important; /* Brighter Slate */
         }
-        #dark-mode-toggle:hover {
-            transform: rotate(15deg) scale(1.1);
+        
+        html.dark .text-slate-500,
+        html.dark .text-slate-400,
+        html.dark .text-textMuted,
+        html.dark .text-\[\#1A2E35\] { 
+            color: #cbd5e1 !important; /* Muted but visible */
         }
+        
+        html.dark .text-slate-300 { color: #94a3b8 !important; }
+
+        html.dark .MathJax { color: #ffffff !important; }
 
         /* Formula inner boxes */
-        .dark .bg-white.px-2.py-1.rounded.border.border-slate-200 { background-color: #1a2f50 !important; border-color: #254a72 !important; }
-        .dark .hidden.px-3.py-2.bg-slate-100\/50.border-t.border-slate-200 { background-color: rgba(13,27,53,0.7) !important; border-color: #1e3a5f !important; }
+        html.dark .bg-white.p-3.rounded-lg,
+        html.dark .bg-white.px-2.py-1.rounded { background-color: #1a2f50 !important; border-color: #254a72 !important; color: #ffffff !important; }
+        html.dark .shadow-inner { box-shadow: inset 0 2px 8px rgba(0,0,0,0.4) !important; }
+
+        /* Badges & Special Elements */
+        html.dark .rounded-xl.bg-slate-50.border.border-slate-100 { background-color: #0d1b35 !important; border-color: #1e3a5f !important; }
+        html.dark .bg-slate-100.text-slate-700 { background-color: #1e3a5f !important; color: #e2e8f0 !important; }
+        html.dark .bg-red-50 { background-color: rgba(127,29,29,0.3) !important; border-color: #7f1d1d !important; }
+
+        /* Hover effects */
+        html.dark .hover\:bg-slate-50:hover,
+        html.dark .hover\:bg-slate-100\/80:hover,
+        html.dark .hover\:bg-slate-200:hover { background-color: #1e3a5f !important; }
+        
+        html.dark a.text-textMuted.hover\:text-textDark { color: #94a3b8 !important; }
+        html.dark a.text-textMuted.hover\:text-textDark:hover { color: #ffffff !important; background-color: #1e3a5f !important; }
+
+        /* Upload & Modal */
+        html.dark .modal-animate { background-color: #0d1b35 !important; }
+        html.dark label.flex.flex-col { border-color: #254a72 !important; background-color: #0d1b35 !important; }
+        html.dark label.flex.flex-col:hover { border-color: rgba(56,189,248,0.5) !important; background-color: #112240 !important; }
+        html.dark .w-14.h-14.bg-white.border.border-slate-200 { background-color: #1a2f50 !important; border-color: #254a72 !important; }
+        html.dark .w-10.h-10.rounded-xl.bg-slate-100 { background-color: #1a2f50 !important; }
+
+        /* Pipelines */
+        html.dark .pipeline-step:not(:last-child)::after { background: linear-gradient(to bottom, #38bdf8 0%, #1e3a5f 100%); }
+        html.dark .bg-gradient-to-r.from-primary\/5 { background: linear-gradient(to right, rgba(30,58,138,0.4), transparent) !important; }
+        html.dark .bg-gradient-to-r.from-blue-50 { background: linear-gradient(to right, rgba(30,58,138,0.4), transparent) !important; }
+        html.dark .bg-gradient-to-r.from-cyan-50 { background: linear-gradient(to right, rgba(21,94,117,0.4), transparent) !important; }
+
+        /* Dark mode toggle button */
+        #dark-mode-toggle { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+        #dark-mode-toggle:hover { transform: rotate(15deg) scale(1.1); }
 
         /* Smooth transitions for all elements */
         *, *::before, *::after {
@@ -204,7 +194,7 @@
     <aside class="w-64 bg-sidebarBg border-r border-cardBorder flex-col hidden lg:flex h-full shrink-0">
         <div class="p-6 border-b border-slate-100">
             <h1 class="text-xl font-bold text-primary mb-0.5">SiCoral</h1>
-            <p class="text-[10px] text-textMuted font-semibold tracking-widest uppercase">Marine Conservation Suite</p>
+            <p class="text-[10px] text-textMuted font-semibold tracking-widest uppercase">Sistem Computational Reef Analysis Laboratory</p>
         </div>
         <div class="px-4 py-5">
             <a href="/dashboard" class="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-white rounded-md font-bold text-xs uppercase tracking-wider shadow-sm hover:bg-primaryDark transition-all active:scale-[0.98]">
@@ -247,7 +237,7 @@
         <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 h-16 flex items-center justify-between px-8 shrink-0 sticky top-0 z-20">
             <div>
                 <h2 class="text-sm font-extrabold text-slate-800 uppercase tracking-widest">Dashboard Analisis</h2>
-                <p class="text-[10px] text-slate-400 font-medium">Monitoring Kesehatan Terumbu Karang &mdash; Realtime</p>
+                <p class="text-[10px] text-slate-400 font-medium">Klasifikasi Kesehatan Terumbu Karang &mdash; Pengolahan Citra Digital</p>
             </div>
 
             <!-- Dark Mode Toggle Button -->

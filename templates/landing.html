@@ -62,11 +62,11 @@
                 </div>
                 
                 <h1 class="text-4xl md:text-5xl font-extrabold leading-[1.1] mb-6">
-                    Marine Health<br>Analysis Solution
+                    Sistem Computational<br>Reef Analysis Laboratory
                 </h1>
                 
                 <p class="text-sm md:text-base text-white/80 max-w-sm leading-relaxed">
-                    Mulai perjalanan penelitian Anda dalam menjaga ekosistem laut bersama teknologi visi komputer mutakhir SICORAL.
+                    Mulai perjalanan penelitian Anda dalam menjaga ekosistem laut bersama teknologi Pengolahan Citra Digital (PCD) dan metode Heuristik dari SICORAL.
                 </p>
             </div>
         </div>
@@ -76,7 +76,7 @@
             {% if stage == 'overview' %}
             <div class="mb-10">
                 <h2 class="text-3xl md:text-4xl font-bold mb-3 text-brandDark">Portal Deteksi Terumbu Karang</h2>
-                <p class="text-textMuted text-sm md:text-base">Gunakan kecerdasan buatan untuk hasil yang lebih akurat</p>
+                <p class="text-textMuted text-sm md:text-base">Gunakan ekstraksi fitur spasial dan algoritma heuristik untuk hasil yang transparan</p>
             </div>
 
             <div class="space-y-8 mb-12">
@@ -87,7 +87,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-bold text-brandDark mb-1 group-hover:text-cyanAccent transition-colors">TAHAP 01: INPUT</h3>
-                        <p class="text-xs text-textMuted leading-relaxed">Unggah citra terumbu karang melalui portal analisis untuk diproses oleh sistem.</p>
+                        <p class="text-xs text-textMuted leading-relaxed">Unggah citra tunggal (JPG/PNG). Sistem akan otomatis melakukan normalisasi dimensi citra dan reduksi noise <i>Gaussian Blur</i>.</p>
                     </div>
                 </a>
 
@@ -97,8 +97,8 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold text-brandDark mb-1 group-hover:text-cyanAccent transition-colors">TAHAP 02: ANALISIS</h3>
-                        <p class="text-xs text-textMuted leading-relaxed">Sistem melakukan ekstraksi fitur untuk mendeteksi pola pemutihan terumbu karang.</p>
+                        <h3 class="text-sm font-bold text-brandDark mb-1 group-hover:text-cyanAccent transition-colors">TAHAP 02: PENGOLAHAN CITRA</h3>
+                        <p class="text-xs text-textMuted leading-relaxed">Pemisahan objek karang dengan segmentasi HSV dan ekstraksi ciri tekstur permukaan menggunakan <i>Canny Edge Density</i>.</p>
                     </div>
                 </a>
 
@@ -108,8 +108,8 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold text-brandDark mb-1 group-hover:text-cyanAccent transition-colors">TAHAP 03: HASIL</h3>
-                        <p class="text-xs text-textMuted leading-relaxed">Dapatkan klasifikasi kesehatan instan beserta visualisasi feature maps yang detail.</p>
+                        <h3 class="text-sm font-bold text-brandDark mb-1 group-hover:text-cyanAccent transition-colors">TAHAP 03: DIAGNOSTIK AKHIR</h3>
+                        <p class="text-xs text-textMuted leading-relaxed">Klasifikasi kondisi karang secara instan melalui aturan matematis pasti (<i>Heuristic Rule-Based</i>) beserta visualisasi transparan.</p>
                     </div>
                 </a>
             </div>
@@ -121,7 +121,7 @@
 
             <div class="text-center mt-auto">
                 <p class="text-[10px] uppercase tracking-[0.2em] font-semibold text-textMuted">
-                    MARINE RESEARCH DIVISION
+                    SISTEM COMPUTATIONAL REEF ANALYSIS LABORATORY
                 </p>
             </div>
             {% else %}
