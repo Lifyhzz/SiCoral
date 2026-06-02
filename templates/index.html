@@ -194,7 +194,7 @@
     <aside class="w-64 bg-sidebarBg border-r border-cardBorder flex-col hidden lg:flex h-full shrink-0">
         <div class="p-6 border-b border-slate-100">
             <h1 class="text-xl font-bold text-primary mb-0.5">SiCoral</h1>
-            <p class="text-[10px] text-textMuted font-semibold tracking-widest uppercase">Sistem Computational Reef Analysis Laboratory</p>
+            <p class="text-[10px] text-textMuted font-semibold tracking-widest uppercase">Sistem Deteksi Otomatis Kesehatan Terumbu Karang Berbasis Pengolahan Citra Digital</p>
         </div>
         <div class="px-4 py-5">
             <a href="/dashboard" class="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-white rounded-md font-bold text-xs uppercase tracking-wider shadow-sm hover:bg-primaryDark transition-all active:scale-[0.98]">
@@ -535,7 +535,7 @@
                                     {% if result and result.steps and 'Bukan' not in result.status %}
                                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                         {% for step in result.steps %}
-                                        <div class="cursor-pointer group" onclick="openModal('data:image/jpeg;base64,{{ step.img }}', '{{ step.name }}', '{{ step.desc }}')">
+                                        <div class="cursor-pointer group" onclick="openModal('data:image/jpeg;base64,{{ step.img }}', '{{ step.name }}', this.querySelector('.step-desc-html').innerHTML)">
                                             <div class="aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-900 relative shadow-sm mb-2">
                                                 <img src="data:image/jpeg;base64,{{ step.img }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100" alt="{{ step.name }}">
                                                 <div class="absolute top-1.5 left-1.5 bg-black/50 text-white text-[8px] font-black px-1.5 py-0.5 rounded backdrop-blur-sm">{{ loop.index }}</div>
@@ -543,8 +543,8 @@
                                                     <svg class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                                 </div>
                                             </div>
-                                            <p class="text-[10px] font-black text-slate-700 text-center">{{ step.name }}</p>
-                                            <p class="text-[9px] text-slate-400 text-center leading-tight mt-0.5">Klik untuk detail</p>
+                                            <p class="text-[10px] font-black text-slate-700 text-center mt-2">{{ step.name }}</p>
+                                            <div class="step-desc-html hidden">{{ step.desc | safe }}</div>
                                         </div>
                                         {% endfor %}
                                     </div>

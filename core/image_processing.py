@@ -197,10 +197,10 @@ def extract_features(image_path):
     return {
         'features': numeric_features,
         'steps': [
-            {'name': 'Original', 'img': img_original_b64, 'desc': 'Citra asli terumbu karang sebelum diproses.'},
-            {'name': 'Resize', 'img': img_resized_b64, 'desc': 'Mengubah dimensi menjadi 224x224 piksel untuk input model.'},
-            {'name': 'Grayscale', 'img': img_gray_b64, 'desc': 'Konversi ke skala abu-abu untuk analisis tekstur (visualisasi).'},
-            {'name': 'Normalisasi', 'img': img_norm_b64, 'desc': 'Aplikasi Gaussian Blur & Normalisasi rentang [0, 1].'}
+            {'name': 'Original', 'img': img_original_b64, 'desc': '<p class="text-slate-600 mb-2">Citra asli terumbu karang sebelum diproses.</p>'},
+            {'name': 'Image Resizing', 'img': img_resized_b64, 'desc': '<p class="text-slate-600 mb-2">Mengubah dimensi menjadi seragam 224x224 piksel dengan interpolasi bilinear.</p><div class="bg-indigo-50 border border-indigo-100 p-3 rounded-lg"><p class="text-[10px] font-black text-indigo-700 mb-1">Rumus Interpolasi Bilinear:</p><p class="text-[10px] text-slate-700 mt-2 font-mono">\\( I\'(x\',y\') = (1-a)(1-b)I(x,y) + a(1-b)I(x+1,y) \\)</p></div>'},
+            {'name': 'Grayscale', 'img': img_gray_b64, 'desc': '<p class="text-slate-600 mb-2">Konversi abu-abu tanpa filter. Ketajaman dipertahankan khusus untuk deteksi polositas/tepi Canny Edge.</p><div class="bg-slate-100 border border-slate-200 p-3 rounded-lg"><p class="text-[10px] font-black text-slate-700 mb-1">ITU-R BT.601 Luminance Formula:</p><p class="text-[10px] text-slate-700 mt-2 font-mono">\\( Gray = 0.114B + 0.587G + 0.299R \\)</p></div>'},
+            {'name': 'Gaussian Blur (5x5)', 'img': img_norm_b64, 'desc': '<p class="text-slate-600 mb-2">Operasi perataan spasial matriks untuk menghilangkan kemericaan/bintik partikel gangguan (pasir laut). <strong>Catatan:</strong> Hasil citra blur ini juga yang di-grayscale ulang secara *backend* untuk digunakan sebagai umpan mutlak Otsu Thresholding otomatis, agar blok objek menjadi solid.</p><div class="bg-purple-50 border border-purple-100 p-3 rounded-lg"><p class="text-[10px] font-black text-purple-700 mb-1">Gaussian Filter 2D (\( \\sigma\\approx1.1 \)) & Otsu Target:</p><p class="text-[10px] text-slate-700 mt-2 font-mono mb-2">\\( G(x,y) = \\frac{1}{2\\pi\\sigma^2} e^{-\\frac{x^2+y^2}{2\\sigma^2}} \\)</p><p class="text-[10px] text-slate-700 font-mono">\\( t^* = \\arg\\max \\sigma_B^2(t) \\)</p></div>'}
         ],
         'filters': filters
     }
