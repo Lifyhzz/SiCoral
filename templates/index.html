@@ -375,7 +375,7 @@
                                             <p class="text-[10px] text-slate-500 leading-tight">
                                                 {% if 'Bukan' in result.status %}Tekstur gambar terindikasi nol porositas (permukaan halus) / warna murni milik air atau benda mati, melanggar batas kewajaran biologis karang.
                                                 {% elif 'Healthy' in result.status %}Kepadatan tepi (tekstur karang) rapat dan wajar. Pigmentasi klorofil zooxanthellae (Saturasi) berada pada level optimal.
-                                                {% else %}Kecerahan ekstrem (&gt;140) disertai hilangnya saturasi, menunjukan gejala biologis *coral bleaching* (pemutihan tingkat stres).
+                                                {% else %}Kecerahan ekstrem (&gt;140) disertai hilangnya saturasi, menunjukan gejala biologis coral bleaching (pemutihan tingkat stres).
                                                 {% endif %}
                                             </p>
                                         </div>
@@ -423,8 +423,8 @@
                     <h3 class="font-bold text-[#1A2E35] text-[15px] uppercase tracking-widest ml-1">Rincian Ambang Batas <span class="font-semibold opacity-70 ml-0.5">(HSV)</span></h3>
                 </div>
 
-                <!-- 3 Kelas -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                <!-- 4 Kelas -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                     <!-- Sehat -->
                     <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm border-b-[5px] border-b-emerald-400 relative transition-transform hover:-translate-y-1 duration-300">
                         <div class="flex justify-between items-start mb-6">
@@ -460,6 +460,18 @@
                         <p class="text-sm font-bold text-slate-800 mb-1.5">Bleached (Sakit)</p>
                         <p class="text-[12px] font-medium text-slate-400">Saturasi <span class="text-rose-500 font-extrabold text-[15px] ml-1">&lt; 50</span></p>
                     </div>
+
+                    <!-- Bukan Terumbu Karang -->
+                    <div class="bg-white rounded-xl p-5 border border-slate-100 shadow-sm border-b-[5px] border-b-slate-400 relative transition-transform hover:-translate-y-1 duration-300">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-11 h-11 bg-slate-50 rounded-[12px] flex items-center justify-center text-slate-500 shadow-sm">
+                                <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span class="px-3 py-1.5 bg-slate-50 text-slate-500 text-[9px] font-black uppercase tracking-wider rounded-full shadow-sm">Invalid</span>
+                        </div>
+                        <p class="text-sm font-bold text-slate-800 mb-1.5">Bukan Karang</p>
+                        <p class="text-[12px] font-medium text-slate-400">Tekstur <span class="text-slate-500 font-extrabold text-[15px] ml-1">&lt; 0.18</span></p>
+                    </div>
                 </div>
             </div>
 
@@ -478,43 +490,8 @@
 
                 <div class="space-y-4">
 
-                    <!-- ── STEP 1: INPUT ── -->
-                    <div class="pipeline-step flex gap-4">
-                        <div class="flex flex-col items-center shrink-0">
-                            <div class="w-10 h-10 rounded-full {% if result %}bg-primary{% else %}bg-slate-200{% endif %} text-white flex items-center justify-center font-black text-sm shadow-md">1</div>
-                        </div>
-                        <div class="flex-1 pb-6">
-                            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover-lift">
-                                <div class="px-5 py-3 border-b border-slate-100 bg-gradient-to-r from-primary/5 to-transparent flex items-center gap-3">
-                                    <div class="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                                    </div>
-                                    <div>
-                                        <span class="text-[11px] font-black text-slate-800 uppercase tracking-wide">Tahap 1: Upload Citra</span>
-                                        <span class="ml-2 text-[9px] font-bold text-slate-400">Input gambar JPG/PNG terumbu karang</span>
-                                    </div>
-                                    {% if result %}<span class="ml-auto px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-full border border-emerald-100">✓ Selesai</span>{% endif %}
-                                </div>
-                                <div class="px-5 py-4 flex items-center gap-4">
-                                    {% if result %}
-                                    <div class="w-14 h-14 rounded-xl overflow-hidden border border-slate-200 shrink-0">
-                                        <img src="{{ url_for('static', filename=result.image_url) }}" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="text-[11px] text-slate-600">Citra diterima dan siap diproses. Format valid, resolusi distandardisasi.</div>
-                                    {% else %}
-                                    <div class="flex gap-3 items-center text-[11px] text-slate-500">
-                                        <div class="w-10 h-10 rounded-xl bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-slate-300">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01"></path></svg>
-                                        </div>
-                                        Menunggu file gambar diunggah...
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- ── STEP 1: PREPROCESSING ── -->
 
-                    <!-- ── STEP 2: PREPROCESSING ── -->
                     <div class="pipeline-step flex gap-4">
                         <div class="flex flex-col items-center shrink-0">
                             <div class="w-10 h-10 rounded-full {% if result %}bg-primary{% else %}bg-slate-200{% endif %} text-white flex items-center justify-center font-black text-sm shadow-md">2</div>
@@ -526,7 +503,7 @@
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                                     </div>
                                     <div>
-                                        <span class="text-[11px] font-black text-slate-800 uppercase tracking-wide">Tahap 2: Preprocessing Citra</span>
+                                        <span class="text-[11px] font-black text-slate-800 uppercase tracking-wide">Tahap 1: Preprocessing</span>
                                         <span class="ml-2 text-[9px] font-bold text-slate-400">Resize → Grayscale → Gaussian Blur</span>
                                     </div>
                                     {% if result and 'Bukan' not in result.status %}<span class="ml-auto px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-full border border-emerald-100">✓ Selesai</span>{% endif %}
@@ -548,12 +525,7 @@
                                         </div>
                                         {% endfor %}
                                     </div>
-                                    <!-- Method tags -->
-                                    <div class="flex flex-wrap gap-2 mt-4">
-                                        <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-[9px] font-black rounded-full border border-blue-100">📐 Resize 224×224</span>
-                                        <span class="px-2.5 py-1 bg-slate-100 text-slate-600 text-[9px] font-black rounded-full border border-slate-200">⬛ Grayscale</span>
-                                        <span class="px-2.5 py-1 bg-purple-50 text-purple-700 text-[9px] font-black rounded-full border border-purple-100">〰 Gaussian Blur (5×5)</span>
-                                    </div>
+
                                     {% else %}
                                     <!-- Placeholder -->
                                     <div class="grid grid-cols-4 gap-4 opacity-25">
@@ -573,10 +545,10 @@
                         </div>
                     </div>
 
-                    <!-- ── STEP 3: ANALISIS FITUR ── -->
+                    <!-- ── STEP 2: SEGMENTASI ── -->
                     <div class="pipeline-step flex gap-4">
                         <div class="flex flex-col items-center shrink-0">
-                            <div class="w-10 h-10 rounded-full {% if result %}bg-primary{% else %}bg-slate-200{% endif %} text-white flex items-center justify-center font-black text-sm shadow-md">3</div>
+                            <div class="w-10 h-10 rounded-full {% if result %}bg-primary{% else %}bg-slate-200{% endif %} text-white flex items-center justify-center font-black text-sm shadow-md">2</div>
                         </div>
                         <div class="flex-1 pb-6">
                             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover-lift">
@@ -585,8 +557,8 @@
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
                                     </div>
                                     <div>
-                                        <span class="text-[11px] font-black text-slate-800 uppercase tracking-wide">Tahap 3: Analisis Fitur Warna (HSV)</span>
-                                        <span class="ml-2 text-[9px] font-bold text-slate-400">Konversi HSV → Otsu Threshold → Ekstraksi Mean & Std Dev</span>
+                                        <span class="text-[11px] font-black text-slate-800 uppercase tracking-wide">Tahap 2: Segmentasi</span>
+                                        <span class="ml-2 text-[9px] font-bold text-slate-400">Transformasi BGR → HSV Masking → Otsu Threshold → Operasi Morfologi</span>
                                     </div>
                                     {% if result and 'Bukan' not in result.status %}
                                     <div class="ml-auto flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-full border border-emerald-200 shadow-sm relative overflow-hidden group">
@@ -604,7 +576,7 @@
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8 items-start">
                                         <!-- Langkah 1 -->
                                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 relative pt-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer group" onclick="this.querySelector('.formula-box').classList.toggle('hidden')">
-                                            <div class="absolute -top-3 left-4 bg-slate-800 text-white text-[9px] font-black px-2.5 py-1 rounded shadow-md uppercase tracking-widest border border-slate-700">Langkah 3.1</div>
+                                            <div class="absolute -top-3 left-4 bg-slate-800 text-white text-[9px] font-black px-2.5 py-1 rounded shadow-md uppercase tracking-widest border border-slate-700">Sub-tahap 2.1</div>
                                             <h5 class="text-[13px] font-black text-slate-800 mb-2 mt-1 flex justify-between items-center group-hover:text-primary transition-colors">
                                                 Konversi RGB ke HSV
                                                 <svg class="w-4 h-4 text-slate-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -630,12 +602,12 @@
 
                                         <!-- Langkah 2 -->
                                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 relative pt-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer group" onclick="this.querySelector('.formula-box').classList.toggle('hidden')">
-                                            <div class="absolute -top-3 left-4 bg-primary text-white text-[9px] font-black px-2.5 py-1 rounded shadow-md uppercase tracking-widest border border-blue-700">Langkah 3.2</div>
+                                            <div class="absolute -top-3 left-4 bg-primary text-white text-[9px] font-black px-2.5 py-1 rounded shadow-md uppercase tracking-widest border border-blue-700">Sub-tahap 2.2</div>
                                             <h5 class="text-[13px] font-black text-slate-800 mb-2 mt-1 flex justify-between items-center group-hover:text-primary transition-colors">
                                                 Segmentasi Otsu & Morfologi
                                                 <svg class="w-4 h-4 text-slate-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                             </h5>
-                                            <p class="text-[10px] text-slate-500 leading-relaxed mb-0">Mencari titik biner optimal (<span class="italic">threshold</span>) untuk memisahkan terumbu karang dari latar (air/batu). Operasi *Opening* membersihkan noise salt-and-pepper.</p>
+                                            <p class="text-[10px] text-slate-500 leading-relaxed mb-0">Mencari titik biner optimal (<span class="italic">threshold</span>) untuk memisahkan terumbu karang dari latar (air/batu). Operasi Opening membersihkan noise salt-and-pepper.</p>
                                             
                                             <!-- Box Rumus (Hidden By Default) -->
                                             <div class="formula-box hidden mt-4 transition-all">
@@ -651,12 +623,12 @@
 
                                         <!-- Langkah 3 -->
                                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 relative pt-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer group" onclick="this.querySelector('.formula-box').classList.toggle('hidden')">
-                                            <div class="absolute -top-3 left-4 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded shadow-md uppercase tracking-widest border border-emerald-700">Langkah 3.3</div>
+                                            <div class="absolute -top-3 left-4 bg-emerald-600 text-white text-[9px] font-black px-2.5 py-1 rounded shadow-md uppercase tracking-widest border border-emerald-700">Sub-tahap 2.3</div>
                                             <h5 class="text-[13px] font-black text-slate-800 mb-2 mt-1 flex justify-between items-center group-hover:text-primary transition-colors">
                                                 Ekstraksi Fitur Statistik
                                                 <svg class="w-4 h-4 text-slate-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                             </h5>
-                                            <p class="text-[10px] text-slate-500 leading-relaxed mb-0">Menghitung ukuran tendensi sentral (Mean) dan variansi distribusi intensitas warna (Std. Deviasi) pada area objek (*masked*) secara spesifik.</p>
+                                            <p class="text-[10px] text-slate-500 leading-relaxed mb-0">Menghitung ukuran tendensi sentral (Mean) dan variansi distribusi intensitas warna (Std. Deviasi) pada area objek (masked) secara spesifik.</p>
                                             
                                             <!-- Box Rumus (Hidden By Default) -->
                                             <div class="formula-box hidden mt-4 transition-all">
@@ -811,13 +783,10 @@
                                             </div>
                                         </div>
 
-                                        <!-- Separator Line -->
-                                        <div class="w-px bg-slate-100 hidden lg:block mx-2"></div>
-
-                                        <!-- Numerical Features -->
-                                        <div class="w-full lg:w-48 shrink-0">
+                                        <!-- Kuantifikasi Fitur (Right Column) -->
+                                        <div class="w-full lg:w-[260px] shrink-0">
                                             <div class="flex items-center gap-2 mb-4">
-                                                <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                                                 <p class="text-[10px] font-black text-slate-700 uppercase tracking-widest">Kuantifikasi Fitur</p>
                                             </div>
 
@@ -835,9 +804,12 @@
                                                 {% elif 'Value' in name %}
                                                     {% set formula = '\\mu_V = \\frac{1}{N} \\sum_{i=1}^{N} V_i' %}
                                                     {% set explanation = 'Rata-rata kecerahan cahaya; nilai V terlalu tinggi bisa berarti pantulan tulang karang mati.' %}
+                                                {% elif 'Edge' in name %}
+                                                    {% set formula = 'ED = \\frac{\\text{Edge Pixels}}{W \\times H}' %}
+                                                    {% set explanation = 'Kepadatan tepi Canny untuk mengukur kompleksitas tekstur permukaan karang.' %}
                                                 {% else %}
                                                     {% set formula = '\\sigma_{gray} = \\sqrt{\\frac{1}{N} \\sum (x_i - \\mu)^2}' %}
-                                                    {% set explanation = 'Nilai Standar Deviasi dari citra grayscale untuk mengukur keragaman tekstur permukaan (polip karang).' %}
+                                                    {% set explanation = 'Standar Deviasi grayscale untuk mengukur keragaman tekstur polip karang.' %}
                                                 {% endif %}
                                                 <div class="bg-slate-50 rounded-lg border border-slate-100 shadow-sm overflow-hidden group">
                                                     <div class="px-3 py-2.5 cursor-pointer hover:bg-slate-100/80 transition-colors" onclick="this.nextElementSibling.classList.toggle('hidden'); if(window.MathJax) MathJax.typesetPromise([this.nextElementSibling]);">
@@ -847,7 +819,7 @@
                                                         </div>
                                                         <div class="flex items-end justify-between">
                                                             <span class="font-mono text-xl font-black text-slate-800 leading-none">{{ value }}</span>
-                                                            <div class="w-2 h-2 rounded-full {% if loop.index == 1 %}bg-cyan-500{% elif loop.index == 2 %}bg-emerald-500{% elif loop.index == 3 %}bg-amber-500{% else %}bg-purple-500{% endif %} mb-0.5"></div>
+                                                            <div class="w-2 h-2 rounded-full {% if loop.index == 1 %}bg-cyan-500{% elif loop.index == 2 %}bg-emerald-500{% elif loop.index == 3 %}bg-amber-500{% elif loop.index == 4 %}bg-blue-500{% else %}bg-purple-500{% endif %} mb-0.5"></div>
                                                         </div>
                                                     </div>
                                                     <div class="hidden px-3 py-2 bg-slate-100/50 border-t border-slate-200">
@@ -861,7 +833,7 @@
                                             </div>
                                             {% else %}
                                             <div class="space-y-3 opacity-40">
-                                                {% for label in ['Mean Hue', 'Mean Saturation', 'Mean Value', 'Std Dev (Texture)'] %}
+                                                {% for label in ['Mean Hue', 'Mean Saturation', 'Mean Value', 'Edge Density', 'Std Dev (Texture)'] %}
                                                 <div class="bg-slate-50 rounded-lg px-3 py-2.5 border border-slate-100">
                                                     <p class="text-[9px] font-black text-slate-400 tracking-wider mb-1 uppercase">{{ label }}</p>
                                                     <span class="font-mono text-xl font-black text-slate-300 leading-none">0.00</span>
@@ -870,11 +842,11 @@
                                             </div>
                                             {% endif %}
                                         </div>
-                                    </div>
-                                </div>
+                                    </div> <!-- End of flex row -->
                             </div>
                         </div>
                     </div>
+
 
             </div><!-- end pipeline section -->
 

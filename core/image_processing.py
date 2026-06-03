@@ -1,6 +1,18 @@
+"""
+image_processing.py
+-------------------
+Modul Inti Pengolahan Citra Digital (Backend CV) menggunakan OpenCV.
+Bertanggung jawab atas ekstraksi fitur matriks (warna & tekstur) dari 
+citra terumbu karang dan mengklasifikasikan kondisinya berdasarkan 
+aturan Heuristic Logic Matematika (Non-Machine Learning).
+"""
 import cv2
 import numpy as np
 import base64
+
+# --- Fungsi Pendukung ---
+# Menggabungkan hasil citra biner opencv ke string Base64 
+# agar dapat dirender secara realtime di elemen <img> di HTML.
 
 def image_to_base64(image):
     _, buffer = cv2.imencode('.jpg', image)
@@ -8,7 +20,9 @@ def image_to_base64(image):
 
 def extract_features(image_path):
     """
-    Multistage Image Processing: Normalisasi, Segmentasi, dan Ekstraksi Vektor Ciri.
+    Fungsi utama pipeline: membaca citra, mengekstrak metrik kuantitatif
+    seperti Rata-Rata HSV dan Kepadatan Tepi (Canny), dan membuat data 
+    visualisasi filter secara generik (tahap demi tahap).
     """
     # Membaca data matriks mentah dari gambar
     img = cv2.imread(image_path)
@@ -207,14 +221,18 @@ def extract_features(image_path):
 
 # Modul Klasifikasi berbasis Aturan Logika (Heuristic Rule-Based Reasoning)
 def predict_coral_health(features):
+    """
+    Menerjemahkan array 5 metrik konkrit (H,S,V,T,E) menjadi Status Diagnosa 
+    melalui penetapan batas statis matematis (heuristic limits).
+    """
     if features is None or len(features) < 5:
         return "Gagal", 0
 
-    h = features[0]
-    s = features[1]
-    v = features[2]
-    t = features[3]
-    e = features[4]
+    h = features[0] # Hue (Sifat Warna)
+    s = features[1] # Saturation (Kepekatan Pigmen Zooxanthellae)
+    v = features[2] # Value (Tembusan Cahaya/Pantulan Tulang)
+    t = features[3] # Std Deviasi Gray (Gradasi Porositas)
+    e = features[4] # Canny Edge Density (Kepenuhan Kerutan Permukaan)
 
     # ══════════════════════════════════════════════════════════════════
     # REKAYASA LOGIKA PROFESIONAL: PENDEKATAN WHITELISTING 

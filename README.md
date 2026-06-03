@@ -11,11 +11,11 @@ SiCoral adalah aplikasi berbasis web yang dikembangkan menggunakan prinsip **Pen
 
 ## 🛠️ Metodologi Pengolahan Citra
 SiCoral menggunakan pipeline PCD murni dengan tahapan sebagai berikut:
-1. **Acquisition & Preprocessing**: Resize (224x224), Grayscale Conversion, dan Gaussian Smoothing untuk mereduksi noise.
-2. **Segmentation**: Menggunakan metode **Otsu's Thresholding** untuk memisahkan objek terumbu karang dari latar belakang air laut secara otomatis.
-3. **Color Transformation**: Konversi ruang warna dari BGR ke **HSV** untuk mendapatkan parameter pigmentasi (Saturation) yang lebih akurat.
-4. **Feature Extraction**: Perhitungan nilai rata-rata (Mean) pada kanal HSV dan standar deviasi intensitas untuk deteksi tekstur permukaan.
-5. **Heuristic Classification**: Klasifikasi menggunakan logika aturan (*Rule-based*) berdasarkan karakteristik fisik terumbu karang.
+1. **Acquisition & Preprocessing**: Resize (224x224), Grayscale Conversion, dan Gaussian Blur (5x5) untuk mereduksi noise (seperti bintik air/pasir).
+2. **Color Transformation**: Konversi ruang warna citra dari BGR ke **HSV** untuk persiapan masking warna laut dan mengukur kekuatan pigmentasi.
+3. **Adaptive Segmentation**: Menggabungkan **Otsu's Thresholding** (berdasarkan intensitas) dengan **HSV Masking** (membuang rentang warna biru air). Setelah itu, dilakukan **Morphological Operations** (Close & Open) serta pemisahan area terbesar (*Largest Contour Isolation*) untuk mengekstrak objek utama.
+4. **Feature Extraction**: Ekstraksi 5 vektor ciri (5-Features) utama: nilai rata-rata (Mean) Hue, Saturation, Value; standar deviasi intensitas (Tekstur ROI); dan perhitungan **Canny Edge Density** untuk validasi kekasaran permukaan.
+5. **Heuristic Classification (*Whitelisting*)**: Klasifikasi 100% berbasis *Rule-based / Thresholding Logic*, di mana sistem secara ketat mem-filter objek non-karang (*whitelisting*) sebelum memvonis kesehatan menjadi Sehat (*Healthy*), Pucat (*Warning*), atau Sakit (*Bleached*).
 
 ## 💻 Teknologi yang Digunakan
 - **Backend**: Python 3.x, Flask Framework.
